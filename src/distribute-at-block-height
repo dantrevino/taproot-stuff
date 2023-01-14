@@ -1,0 +1,25 @@
+# Define the block height at which the distribution will occur
+block_height = 123456
+
+# Define the list of addresses to receive the Bitcoin
+addresses = [
+  "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa",
+  "1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2",
+  "1C7zdTfnkzmr13HfA2vNm5SJYRK6nEKyq8"
+]
+
+# Define the distribution amounts for each address
+amounts = [0.5, 0.25, 0.25]
+
+# Create the Taproot script
+script = "OP_IF"
+script += " OP_BLOCKHEIGHT {} OP_EQUALVERIFY".format(block_height)
+
+# Add the check for each address and amount
+for i in range(len(addresses)):
+    script += " OP_DUP OP_HASH160 {} OP_EQUALVERIFY".format(addresses[i])
+    script += " OP_SWAP OP_SIZE 32 OP_EQUAL"
+    script += " OP_ADD {} OP_EQUAL".format(amounts[i])
+
+# Close the Taproot script
+script += " OP_ENDIF"
